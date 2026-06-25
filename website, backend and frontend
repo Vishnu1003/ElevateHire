@@ -51,3 +51,7 @@ Your Flask server should start:
 Running on http://127.0.0.1:5000
 
 In the python file add the key in the api key section of the code and run the code and open  http://127.0.0.1:5000
+
+
+
+In the file create a new folder called public and add the index.html file and create a new folder and name it Upload(to upload the resume)
