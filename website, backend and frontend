@@ -1,0 +1,53 @@
+This file contains a python file the groq api key can be found in "https://console.groq.com/keys"
+Steps to be followed before running the python file and installation for the code requirement:
+1. Install Python
+
+Download Python (3.10+ recommended):
+Python Official Website
+
+During installation → ✔ Add Python to PATH
+
+2. Install VS Code Extensions
+
+Open VS Code → Extensions (Ctrl+Shift+X) → install:
+
+Python Extension (Microsoft)
+Pylance
+3. Open Terminal in VS Code
+
+Run:
+
+pip install flask
+pip install flask-mail
+pip install flask-cors
+pip install openai
+pip install pdfplumber
+pip install python-docx
+pip install werkzeug
+
+Or install all together:
+
+pip install flask flask-mail flask-cors openai pdfplumber python-docx werkzeug
+4. (Recommended) Create requirements.txt
+
+Create a file:
+
+flask
+flask-mail
+flask-cors
+openai
+pdfplumber
+python-docx
+werkzeug
+
+Then install:
+
+pip install -r requirements.txt
+5. Run the project
+python "Pasted code(2).py"
+
+Your Flask server should start:
+
+Running on http://127.0.0.1:5000
+
+In the python file add the key in the api key section of the code and run the code and open  http://127.0.0.1:5000
