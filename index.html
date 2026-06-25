@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElevateHire</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    /* Reset and Base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #050914;
+      color: #e2e8f0;
+      overflow: hidden;
+      position: relative;
+      height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 15% 50%, rgba(0, 240, 255, 0.08), transparent 50%), radial-gradient(circle at 85% 30%, rgba(189, 0, 255, 0.08), transparent 50%);
+      z-index: -1;
+    }
+
+    .bg-grid {
+      position: absolute;
+      inset: -50%;
+      background-size: 40px 40px;
+      background-image: linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      z-index: -1;
+      transform: perspective(500px) rotateX(60deg) translateY(-100px) scale(2);
+      animation: gridMove 15s linear infinite;
+      opacity: 0.6;
+    }
+
+    @keyframes gridMove {
+      0% {
+        transform: perspective(500px) rotateX(60deg) translateY(0) scale(2);
+      }
+
+      100% {
+        transform: perspective(500px) rotateX(60deg) translateY(40px) scale(2);
+      }
+    }
+
+    /* ---------------- AUTH SCREEN ---------------- */
+    #authScreen {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 9, 20, 0.85);
+      backdrop-filter: blur(20px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.8s cubic-bezier(0.8, 0, 0.2, 1), visibility 0.8s, transform 0.8s cubic-bezier(0.8, 0, 0.2, 1);
+    }
+
+    .auth-fade-out {
+      opacity: 0 !important;
+      visibility: hidden;
+      transform: scale(1.1);
+      pointer-events: none;
+    }
+
+    .auth-box {
+      width: 420px;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 24px;
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      box-shadow: 0 0 40px rgba(0, 240, 255, 0.1), inset 0 0 20px rgba(189, 0, 255, 0.05);
+      animation: boxEntrance 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .auth-box::before,
+    .auth-box::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #00f0ff;
+      border-radius: 4px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .auth-box::before {
+      top: 15px;
+      left: 15px;
+      border-right: none;
+      border-bottom: none;
+    }
+
+    .auth-box::after {
+      bottom: 15px;
+      right: 15px;
+      border-left: none;
+      border-top: none;
+    }
+
+    @keyframes boxEntrance {
+      0% {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+        filter: blur(10px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+      }
+    }
+
+    .auth-slider {
+      display: flex;
+      width: 300%;
+      transition: transform 0.5s cubic-bezier(0.8, 0, 0.2, 1);
+    }
+
+    .auth-view {
+      width: 420px;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .auth-box h1 {
+      text-align: center;
+      font-family: 'Orbitron', sans-serif;
+      color: #ffffff;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+      letter-spacing: 2px;
+    }
+
+    .auth-box input {
+      width: 100%;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.3);
+      color: white;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .auth-box input:focus {
+      border-color: #00f0ff;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .auth-box input.error-input {
+      border-color: #ff0055;
+      box-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
+    }
+
+    .auth-box button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      background: linear-gradient(90deg, #00f0ff, #0066ff);
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-box button::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transform: skewX(-20deg);
+      transition: 0.5s;
+    }
+
+    .auth-box button:hover::after {
+      left: 150%;
+    }
+
+    .auth-box button:hover {
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border-color: rgba(255, 255, 255, 0.3) !important;
+      box-shadow: none !important;
+    }
+
+    .authMsg {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #00f0ff;
+      font-size: 13px;
+      min-height: 18px;
+    }
+
+    .error-msg {
+      color: #ff0055 !important;
+    }
+
+    /* ---------------- MAIN APP ---------------- */
+    .app-content {
+      display: none;
+      height: 100vh;
+      flex-direction: column;
+      animation: appFadeIn 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    @keyframes appFadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .nav {
+      padding: 20px 35px;
+      font-size: 24px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 800;
+      color: #ffffff;
+      border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+      background: rgba(5, 9, 20, 0.6);
+      backdrop-filter: blur(10px);
+      text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav::after {
+      content: '';
+      width: 50px;
+      height: 3px;
+      background: #00f0ff;
+      display: block;
+      box-shadow: 0 0 10px #00f0ff;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 30px 25px 15px;
+    }
+
+    .hero h2 {
+      font-size: 38px;
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(to right, #00f0ff, #bd00ff);
+      -webkit-background-clip: text;
+      color: transparent;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .hero p {
+      color: #94a3b8;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+
+    .container {
+      display: flex;
+      gap: 30px;
+      padding: 20px 35px 35px;
+      flex: 1;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .panel {
+      flex: 1;
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(0, 240, 255, 0.02);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .panel:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 240, 255, 0.1) inset;
+    }
+
+    .panel-head {
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, rgba(0, 240, 255, 0.05), transparent);
+      color: #00f0ff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel-body {
+      padding: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    #chatBox {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message {
+      padding: 14px 18px;
+      border-radius: 16px;
+      margin: 10px 0;
+      max-width: 80%;
+      font-size: 15px;
+      line-height: 1.5;
+      animation: msgEntrance 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      opacity: 0;
+      transform: translateY(15px) scale(0.95);
+    }
+
+    @keyframes msgEntrance {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .user {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(0, 102, 255, 0.2));
+      color: #e2e8f0;
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      margin-left: auto;
+      border-bottom-right-radius: 4px;
+    }
+
+    .bot {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      border-bottom-left-radius: 4px;
+    }
+
+    .chat-row {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .chat-row input {
+      flex: 1;
+      padding: 15px 20px;
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.4);
+      color: white;
+      font-size: 15px;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    .chat-row input:focus {
+      border-color: #00f0ff;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+    }
+
+    .chat-row button,
+    .upload-btn {
+      padding: 15px 24px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(90deg, #00f0ff, #0066ff);
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3);
+    }
+
+    .chat-row button:hover,
+    .upload-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 240, 255, 0.5);
+    }
+
+    .upload-wrap {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 30px;
+      border-radius: 16px;
+      border: 2px dashed rgba(0, 240, 255, 0.3);
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .upload-wrap:hover {
+      border-color: #00f0ff;
+      background: rgba(0, 240, 255, 0.05);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+    }
+
+    .upload-wrap input {
+      width: 100%;
+      margin-bottom: 20px;
+      color: #94a3b8;
+      font-family: inherit;
+    }
+
+    .upload-wrap input::file-selector-button {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-right: 15px;
+    }
+
+    .upload-wrap input::file-selector-button:hover {
+      background: rgba(0, 240, 255, 0.2);
+      border-color: #00f0ff;
+    }
+
+    .upload-btn {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .card {
+      margin-top: 20px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 20px;
+      border-radius: 16px;
+      border: 1px solid rgba(0, 240, 255, 0.15);
+      animation: appFadeIn 0.5s ease;
+    }
+
+    #result {
+      flex: 1;
+      overflow-y: auto;
+      margin-top: 10px;
+      padding-right: 10px;
+    }
+
+    .card h3 {
+      color: #00f0ff;
+      font-family: 'Orbitron', sans-serif;
+      margin-bottom: 10px;
+      display: inline-block;
+      border-bottom: 2px solid #bd00ff;
+      padding-bottom: 5px;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 240, 255, 0.3);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 240, 255, 0.6);
+    }
+
+    .analyzing-text {
+      color: #00f0ff;
+      font-family: 'Orbitron', sans-serif;
+      animation: pulse 1s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from {
+        opacity: 0.5;
+        text-shadow: 0 0 0 transparent;
+      }
+
+      to {
+        opacity: 1;
+        text-shadow: 0 0 10px #00f0ff;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-grid"></div>
+
+  <!-- ================= AUTH ================= -->
+  <div id="authScreen">
+    <div class="auth-box">
+      <div class="auth-slider" id="authSlider">
+
+        <!-- LOGIN VIEW -->
+        <div class="auth-view" id="viewLogin">
+          <h1>ElevateHire 🚀</h1>
+          <div class="authMsg" id="loginMsg">Login to System</div>
+
+          <input type="email" id="loginEmail" placeholder="Email">
+          <input type="password" id="loginPassword" placeholder="Password">
+
+          <button onclick="loginUser()">Access Terminal</button>
+          <button class="btn-secondary" onclick="slideAuth(1)">Create Account</button>
+        </div>
+
+        <!-- REGISTER DETAILS VIEW -->
+        <div class="auth-view" id="viewRegister">
+          <h1>Register 🚀</h1>
+          <div class="authMsg" id="regMsg">Initialize Credentials</div>
+
+          <input type="text" id="regName" placeholder="Full Name">
+          <input type="email" id="regEmail" placeholder="Email">
+          <input type="password" id="regPassword" placeholder="Password (Upper, Number, Special)">
+
+          <button onclick="sendRegisterOtp()">Request OTP Verification</button>
+          <button class="btn-secondary" onclick="slideAuth(0)">Back to Login</button>
+        </div>
+
+        <!-- REGISTER OTP VIEW -->
+        <div class="auth-view" id="viewOtp">
+          <h1>Verification 🚀</h1>
+          <div class="authMsg" id="otpMsg">Enter OTP from Email</div>
+
+          <input type="text" id="regOtp" placeholder="Enter OTP Code">
+
+          <button onclick="verifyRegister()">Verify & Initialize</button>
+          <button class="btn-secondary" onclick="slideAuth(1)">Back</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MAIN APP ================= -->
+  <div class="app-content" id="mainApp">
+    <div class="nav">ElevateHire</div>
+    <div class="hero">
+      <h2>AI Recruitment Platform</h2>
+      <p>Smart hiring with cybernetic assistant and resume analyzer.</p>
+    </div>
+    <div class="container">
+      <div class="panel">
+        <div class="panel-head">💬 RON - Recruiter Terminal</div>
+        <div class="panel-body">
+          <div id="chatBox"></div>
+          <div class="chat-row">
+            <input type="text" id="message" placeholder="Awaiting input..."
+              onkeypress="if(event.key==='Enter') sendMessage()">
+            <button onclick="sendMessage()">Transmit</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">📄 Data Analyzer</div>
+        <div class="panel-body">
+          <div class="upload-wrap">
+            <input type="file" id="resume">
+            <button class="upload-btn" onclick="uploadResume()">Initiate Analysis</button>
+          </div>
+          <div id="result"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let history = "";
+
+    function slideAuth(index) {
+      document.getElementById('authSlider').style.transform = `translateX(-${index * 33.333}%)`;
+    }
+
+    function validatePassword(pw) {
+      const minLength = pw.length >= 8;
+      const hasUpper = /[A-Z]/.test(pw);
+      const hasNumber = /\d/.test(pw);
+      const hasSpecial = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(pw);
+      return minLength && hasUpper && hasNumber && hasSpecial;
+    }
+
+    /* ================= LOGIN ================= */
+    async function loginUser() {
+      const emailVal = document.getElementById('loginEmail').value;
+      const passwordVal = document.getElementById('loginPassword').value;
+      const msgEl = document.getElementById('loginMsg');
+
+      try {
+        const res = await fetch("/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: emailVal, password: passwordVal })
+        });
+        const data = await res.json();
+
+        if (data.message === "Login Success") {
+          const authScreen = document.getElementById('authScreen');
+          const mainApp = document.getElementById('mainApp');
+          authScreen.classList.add("auth-fade-out");
+          setTimeout(() => {
+            authScreen.style.display = "none";
+            mainApp.style.display = "flex";
+            greetAI();
+          }, 800);
+        } else {
+          msgEl.innerText = data.message;
+          msgEl.classList.add("error-msg");
+        }
+      } catch (e) {
+        msgEl.innerText = "Connection Error.";
+        msgEl.classList.add("error-msg");
+      }
+    }
+
+    /* ================= REGISTER OTP ================= */
+    async function sendRegisterOtp() {
+      const nameVal = document.getElementById('regName').value;
+      const emailVal = document.getElementById('regEmail').value;
+      const passwordVal = document.getElementById('regPassword').value;
+      const pwInput = document.getElementById('regPassword');
+      const msgEl = document.getElementById('regMsg');
+
+      if (!nameVal || !emailVal || !passwordVal) {
+        msgEl.innerText = "All fields required.";
+        msgEl.classList.add("error-msg");
+        return;
+      }
+
+      if (!validatePassword(passwordVal)) {
+        pwInput.classList.add("error-input");
+        msgEl.innerText = "Password must be 8+ chars, 1 Uppercase, 1 Number, 1 Special Char.";
+        msgEl.classList.add("error-msg");
+        return;
+      }
+
+      pwInput.classList.remove("error-input");
+      msgEl.innerText = "Requesting OTP...";
+      msgEl.classList.remove("error-msg");
+
+      try {
+        const res = await fetch("/send-register-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: emailVal })
+        });
+        const data = await res.json();
+
+        // Switch to OTP view
+        slideAuth(2);
+        document.getElementById('otpMsg').innerText = data.message;
+        document.getElementById('otpMsg').classList.remove("error-msg");
+      } catch (e) {
+        msgEl.innerText = "Connection error.";
+        msgEl.classList.add("error-msg");
+      }
+    }
+
+    /* ================= VERIFY REGISTER ================= */
+    async function verifyRegister() {
+      const nameVal = document.getElementById('regName').value;
+      const emailVal = document.getElementById('regEmail').value;
+      const passwordVal = document.getElementById('regPassword').value;
+      const otpVal = document.getElementById('regOtp').value;
+      const msgEl = document.getElementById('otpMsg');
+
+      try {
+        const res = await fetch("/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: nameVal, email: emailVal, password: passwordVal, otp: otpVal })
+        });
+        const data = await res.json();
+
+        if (data.message === "Registered Successfully") {
+          msgEl.innerText = "Success! Initializing system...";
+          msgEl.classList.remove("error-msg");
+          setTimeout(() => slideAuth(0), 1000); // go back to login
+        } else {
+          msgEl.innerText = data.message;
+          msgEl.classList.add("error-msg");
+        }
+      } catch (e) {
+        msgEl.innerText = "Connection Error.";
+        msgEl.classList.add("error-msg");
+      }
+    }
+
+    /* ================= GREET AI ================= */
+    async function greetAI() {
+      const chatBox = document.getElementById("chatBox");
+      const res = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: "System initialization complete. Greet the operative.", history: "" })
+      });
+      const data = await res.json();
+      addMessage(data.reply, "bot");
+    }
+
+    /* ================= CHAT ================= */
+    function addMessage(text, type) {
+      const chatBox = document.getElementById("chatBox");
+      const div = document.createElement("div");
+      div.className = "message " + type;
+      div.innerText = text;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const msgInput = document.getElementById('message');
+      const msg = msgInput.value.trim();
+      if (!msg) return;
+
+      addMessage(msg, "user");
+      msgInput.value = "";
+
+      const res = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: msg, history: history })
+      });
+      const data = await res.json();
+      addMessage(data.reply, "bot");
+      history += "User:" + msg + "\nRON:" + data.reply + "\n";
+    }
+
+    /* ================= RESUME ================= */
+    async function uploadResume() {
+      const file = document.getElementById('resume').files[0];
+      if (!file) { alert("Select file first."); return; }
+
+      let formData = new FormData();
+      formData.append("resume", file);
+      document.getElementById('result').innerHTML = "<div class='analyzing-text'>System Analyzing Resume Data...</div>";
+
+      const res = await fetch("/upload", { method: "POST", body: formData });
+      const data = await res.json();
+
+      document.getElementById('result').innerHTML = `
+    <div class="card">
+      <h3>ATS Match: ${data.ats_score}%</h3>
+      <br><pre>${data.analysis}</pre>
+    </div>
+  `;
+    }
+  </script>
+</body>
+
+</html>
