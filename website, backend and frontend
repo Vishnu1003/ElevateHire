@@ -55,3 +55,17 @@ In the python file add the key in the api key section of the code and run the co
 
 
 In the file create a new folder called public and add the index.html file and create a new folder and name it Upload(to upload the resume)
+
+
+
+File Structure:
+Project Folder
+│
+├── app.py
+├── auth.db
+├── .env
+├── requirements.txt
+│
+├── public
+│   ├── index.html
+├── uploads
